@@ -1,0 +1,9 @@
+node_modules
+.pnpm-store
+.env
+dist
+.next
+artifacts
+cache
+typechain-types
+coverage
