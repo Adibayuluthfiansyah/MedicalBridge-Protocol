@@ -6,8 +6,8 @@ import { Prisma } from '@prisma/client';
 export class PatientsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.PatientCreateInput) {
-    return this.prisma.patient.create({ data });
+  async create(createPatientDto: Prisma.PatientCreateInput) {
+    return this.prisma.patient.create({ data: createPatientDto });
   }
 
   async findAll() {
@@ -30,10 +30,10 @@ export class PatientsService {
     });
   }
 
-  async update(id: string, data: Prisma.PatientUpdateInput) {
+  async update(id: string, updatePatientDto: Prisma.PatientUpdateInput) {
     return this.prisma.patient.update({
       where: { id },
-      data,
+      data: updatePatientDto,
     });
   }
 
