@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PatientsService {
-  create(createPatientDto: CreatePatientDto) {
-    return 'This action adds a new patient';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createPatientDto: Prisma.PatientCreateInput) {
+    return this.prisma.patient.create({ data: createPatientDto });
   }
 
-  findAll() {
-    return `This action returns all patients`;
+  async findAll() {
+    return this.prisma.patient.findMany({
+      take: 10,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: string) {
+    return this.prisma.patient.findUnique({
+      where: { id },
+      include: {
+        medicalRecords: {
+          include: {
+            doctor: true,
+          },
+        },
+      },
+    });
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
+  async update(id: string, updatePatientDto: Prisma.PatientUpdateInput) {
+    return this.prisma.patient.update({
+      where: { id },
+      data: updatePatientDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async remove(id: string) {
+    return this.prisma.patient.delete({
+      where: { id },
+    });
   }
 }
